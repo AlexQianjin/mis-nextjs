@@ -14,6 +14,30 @@ pnpm dev
 bun dev
 ```
 
+## VS Code Debug Config
+```
+[
+    {
+        "type": "msedge",
+        "request": "launch",
+        "name": "Launch Edge against localhost",
+        "url": "http://localhost:3000",
+        "webRoot": "${workspaceFolder}"
+    },
+    {
+        "name": "Next.js: debug full stack",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "npm run dev",
+        "serverReadyAction": {
+            "pattern": "- Local:.+(https?://.+)",
+            "uriFormat": "%s",
+            "action": "debugWithEdge"
+        }
+    }
+]
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
