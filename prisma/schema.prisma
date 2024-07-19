@@ -14,23 +14,32 @@ generator client {
 // }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String?
+  samples Sample[]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Sample {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  status      SampleStatus @default(LOGGED)
+  isDeleted   Boolean      @default(false)
+  owner       User         @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+}
+
+enum SampleStatus {
+  LOGGED
+  PROCESSING
+  FINISHED
+  REPORTED
+  FAILED
 }
