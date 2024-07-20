@@ -1,4 +1,7 @@
 {
+  "plugins": [
+    "react"
+  ],
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
@@ -6,6 +9,12 @@
     "plugin:react/jsx-runtime"
   ],
   "rules": {
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
