@@ -49,6 +49,10 @@ export async function getSamples(
     totalSamples
   };
 }
+
+export async function editSample(formData: FormData) {
+  
+}
 export async function deleteSample(formData: FormData) {
   // let id = Number(formData.get('id'));
   // await deleteSampleById(id);

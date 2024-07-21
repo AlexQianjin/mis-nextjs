@@ -74,7 +74,10 @@ export function SamplesTable({
           <div className="text-xs text-muted-foreground">
             Showing{' '}
             <strong>
-              {Math.min(offset - samplesPerPage, totalSamples) + 1}-{offset}
+              {totalSamples < samplesPerPage
+                ? 1
+                : Math.min(offset - samplesPerPage, totalSamples) + 1}
+              -{totalSamples < samplesPerPage ? totalSamples : offset}
             </strong>{' '}
             of <strong>{totalSamples}</strong> samples
           </div>

@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { File, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SamplesTable } from './samples-table';
+import { DialogEdit } from './sample-edit';
 import { getSamples } from './actions';
 
 export default async function SamplesPage({
@@ -11,7 +12,7 @@ export default async function SamplesPage({
 }) {
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
-  const { samples, newOffset, totalProducts } = await getSamples(
+  const { samples, newOffset, totalSamples } = await getSamples(
     search,
     Number(offset)
   );
@@ -34,19 +35,14 @@ export default async function SamplesPage({
               Export
             </span>
           </Button>
-          <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
-            </span>
-          </Button>
+          {DialogEdit(null)}
         </div>
       </div>
       <TabsContent value="all">
         <SamplesTable
           samples={samples}
           offset={newOffset ?? 0}
-          totalProducts={totalProducts}
+          totalSamples={totalSamples}
         />
       </TabsContent>
     </Tabs>
