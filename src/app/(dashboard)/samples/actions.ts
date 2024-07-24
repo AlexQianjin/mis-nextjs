@@ -1,6 +1,5 @@
 'use server';
 
-import { deleteSampleById } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 import prisma from '@/lib/db';
