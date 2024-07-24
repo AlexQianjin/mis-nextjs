@@ -31,6 +31,12 @@ function DialogDelete(sample: Sample) {
         </div>
         <DialogFooter>
           <form action={deleteSample}>
+            <input
+              id="id"
+              name="id"
+              value={sample.id}
+              className="invisible"
+            />
             <Button type="submit">Delete</Button>
           </form>
           {/* <Button type="submit">Save changes</Button> */}
