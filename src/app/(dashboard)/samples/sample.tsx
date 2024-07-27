@@ -1,50 +1,10 @@
 // import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog';
+
 import { TableCell, TableRow } from '@/components/ui/table';
 import type { Sample } from '@prisma/client';
-import { deleteSample } from './actions';
 import { DialogEdit } from './sample-edit';
-
-function DialogDelete(sample: Sample) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Delete</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Delete sample</DialogTitle>
-          <DialogDescription></DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          Are you sure to delete {sample.name} ?
-        </div>
-        <DialogFooter>
-          <form action={deleteSample}>
-            <input
-              id="id"
-              name="id"
-              value={sample.id}
-              className="invisible"
-            />
-            <Button type="submit">Delete</Button>
-          </form>
-          {/* <Button type="submit">Save changes</Button> */}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+import { DialogDelete } from './sample-delete';
 
 export function Sample({ sample }: { sample: Sample }) {
   return (
@@ -60,8 +20,8 @@ export function Sample({ sample }: { sample: Sample }) {
         {sample.createdAt?.toLocaleString()}
       </TableCell>
       <TableCell className="flex gap-2">
-        {DialogEdit(sample)}
-        {DialogDelete(sample)}
+        <DialogEdit sample={sample}/>
+        <DialogDelete sample={sample}/>
       </TableCell>
     </TableRow>
   );

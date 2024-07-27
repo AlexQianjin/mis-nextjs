@@ -52,8 +52,6 @@ export async function getSamples(
 export async function editSample(formData: FormData) {}
 export async function deleteSample(formData: FormData) {
   const id = formData.get('id') as string;
-  console.log(56, id);
-  // await prisma.sample.delete({ where: { id: id } });
-  // // await deleteSampleById(id);
+  await prisma.sample.delete({ where: { id: id } });
   revalidatePath('/');
 }

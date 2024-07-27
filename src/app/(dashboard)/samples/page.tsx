@@ -35,7 +35,7 @@ export default async function SamplesPage({
               Export
             </span>
           </Button>
-          {DialogEdit(null)}
+          <DialogEdit />
         </div>
       </div>
       <TabsContent value="all">
