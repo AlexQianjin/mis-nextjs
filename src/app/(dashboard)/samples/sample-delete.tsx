@@ -43,10 +43,7 @@ export function DialogDelete({ sample }: DialogDeleteProps) {
               id="id"
               name="id"
               value={sample.id}
-              className="invisible"
-              readOnly={true}
-              title=''
-              placeholder='sample id'
+              type='hidden'
             />
             <Button type="submit" onClick={handleDialogOpen}>
               Delete
