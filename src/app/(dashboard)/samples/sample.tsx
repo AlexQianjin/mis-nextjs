@@ -16,7 +16,7 @@ export function Sample({ sample }: { sample: Sample }) {
           {sample.status}
         </Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell">
+      <TableCell className="hidden md:table-cell" suppressHydrationWarning={true}>
         {sample.createdAt?.toLocaleString()}
       </TableCell>
       <TableCell className="flex gap-2">
