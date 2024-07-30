@@ -20,7 +20,6 @@ interface DialogDeleteProps {
 export function DialogDelete({ sample }: DialogDeleteProps) {
   const [open, setOpen] = useState(false);
   const handleDialogOpen = () => {
-    console.log(25);
     setOpen(false);
   };
 

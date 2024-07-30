@@ -5,6 +5,12 @@ import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
 
 import type { Sample } from '@prisma/client';
+import type { Sample as ZodSample } from './SampleSchema';
+
+type ReturnType = {
+  message: string;
+  errors?: Record<string, unknown>;
+};
 
 export async function getSamples(
   search: string,
@@ -49,7 +55,13 @@ export async function getSamples(
   };
 }
 
-export async function editSample(formData: FormData) {}
+export async function editSample(
+  currentState,
+  formData: ZodSample
+): Promise<ReturnType> {
+  console.log(62, formData);
+  return { message: 'success' };
+}
 export async function deleteSample(formData: FormData) {
   const id = formData.get('id') as string;
   await prisma.sample.delete({ where: { id: id } });
