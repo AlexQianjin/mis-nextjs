@@ -58,8 +58,13 @@ export async function getSamples(
 export async function editSample(
   currentState,
   formData: ZodSample
-): Promise<ReturnType> {
-  console.log(62, formData);
+) {
+  const upsertSample = await prisma.sample.upsert({
+    where: { id: formData.id },
+    update: { ...formData, updatedAt: new Date(Date.now()).toISOString() },
+    create: { ...formData, ownerId: 2 }
+  });
+  console.log(68, upsertSample);
   return { message: 'success' };
 }
 export async function deleteSample(formData: FormData) {

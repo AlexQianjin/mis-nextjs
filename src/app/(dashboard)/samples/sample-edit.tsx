@@ -11,11 +11,26 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { PlusCircle } from 'lucide-react';
 import type { Sample } from './SampleSchema';
 import { editSample } from './actions';
 import { useForm } from 'react-hook-form';
-import { Form } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { SampleSchema } from './SampleSchema';
@@ -43,11 +58,6 @@ export function DialogEdit({ sample }: DialogEditProps) {
     defaultValues: sample == null ? { ...defaultSample } : { ...sample }
   });
 
-  const handleDialogOpen = () => {
-    console.log(25);
-    setOpen(false);
-  };
-
   async function onSubmit() {
     // setMessage('')
     // setErrors({})
@@ -61,11 +71,21 @@ export function DialogEdit({ sample }: DialogEditProps) {
       return;
     } else {
       // setMessage(result.message)
+      console.log(79, state);
+      setOpen(false);
       router.refresh(); // could grab a new timestamp from db
       // reset dirty fields
       form.reset(form.getValues());
     }
   }
+
+  const statusOptions: string[] = [
+    'LOGGED',
+    'PROCESSING',
+    'FINISHED',
+    'REPORTED',
+    'FAILED'
+  ];
 
   return (
     <Dialog key={'edit-sample-dialog'} open={open} onOpenChange={setOpen}>
@@ -93,15 +113,63 @@ export function DialogEdit({ sample }: DialogEditProps) {
               form.handleSubmit(onSubmit)();
             }}
           >
-            <div className="grid gap-4 py-4"></div>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sample name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Sample name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Description" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Sample status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {statusOptions.map((statusOption) => (
+                          <SelectItem key={statusOption} value={statusOption}>
+                            {statusOption}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <DialogFooter>
-              <Button
-                type="submit"
-                onClick={handleDialogOpen}
-              >
-                Save
-              </Button>
-              {/* <Button type="submit">Save changes</Button> */}
+              <Button type="submit">Save</Button>
             </DialogFooter>
           </form>
         </Form>
