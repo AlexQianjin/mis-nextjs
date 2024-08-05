@@ -6,11 +6,12 @@ import prisma from '@/lib/db';
 
 import type { Sample } from '@prisma/client';
 import type { Sample as ZodSample } from './SampleSchema';
+import { SampleSchema } from './SampleSchema';
 
-type ReturnType = {
-  message: string;
-  errors?: Record<string, unknown>;
-};
+// type ReturnType = {
+//   message: string;
+//   errors?: Record<string, unknown>;
+// };
 
 export async function getSamples(
   search: string,
@@ -27,7 +28,7 @@ export async function getSamples(
   //       .limit(1000)
   if (search) {
     const samples: Sample[] = await prisma.sample.findMany({
-      where: { name: { contains: search } },
+      where: { name: { contains: search }, isDeleted: false },
       take: 1000
     });
     return {
@@ -43,6 +44,7 @@ export async function getSamples(
 
   const totalSamples = await prisma.sample.count();
   const moreSamples = await prisma.sample.findMany({
+    where: { isDeleted: false },
     skip: offset,
     take: 5
   });
@@ -55,20 +57,41 @@ export async function getSamples(
   };
 }
 
-export async function editSample(
-  currentState,
-  formData: ZodSample
-) {
-  const upsertSample = await prisma.sample.upsert({
-    where: { id: formData.id },
-    update: { ...formData, updatedAt: new Date(Date.now()).toISOString() },
-    create: { ...formData, ownerId: 2 }
-  });
-  console.log(68, upsertSample);
-  return { message: 'success' };
+export async function editSample(currentState, formData: ZodSample) {
+  const parsed = SampleSchema.safeParse(formData);
+  if (!parsed.success) {
+    return {
+      message: 'Submission Failed',
+      errors: parsed.error.flatten().fieldErrors
+    };
+  }
+  console.log(68, formData);
+
+  try {
+    if (formData.id) {
+      const updated = await prisma.sample.update({
+        where: { id: formData.id },
+        data: { ...formData, updatedAt: new Date(Date.now()).toISOString() }
+      });
+      console.log(76, updated);
+    } else {
+      const created = await prisma.sample.create({
+        data: {
+          ...formData,
+          ownerId: 2,
+          updatedAt: new Date(Date.now()).toISOString()
+        }
+      });
+      console.log(85, created);
+    }
+
+    return { message: 'success', errors: '' };
+  } catch (error) {
+    return { message: 'failed', errors: error };
+  }
 }
 export async function deleteSample(formData: FormData) {
   const id = formData.get('id') as string;
-  await prisma.sample.delete({ where: { id: id } });
+  await prisma.sample.update({ where: { id: id }, data: { isDeleted: true } });
   revalidatePath('/');
 }
