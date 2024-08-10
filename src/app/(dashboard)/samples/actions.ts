@@ -78,7 +78,7 @@ export async function editSample(currentState, formData: ZodSample) {
       const created = await prisma.sample.create({
         data: {
           ...formData,
-          ownerId: 2,
+          ownerId: 'clznv1m4y00015fwf8amog0yz',
           updatedAt: new Date(Date.now()).toISOString()
         }
       });

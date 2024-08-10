@@ -9,11 +9,12 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { auth, signOut } from '@/auth';
+// import { redirect } from 'next/navigation';
 
 export async function User() {
-  //   let session = await auth();
-  //   let user = session?.user;
-  const user = null;
+  const session = await auth();
+  const user = session?.user;
 
   return (
     <DropdownMenu>
@@ -43,6 +44,7 @@ export async function User() {
             <form
               action={async () => {
                 'use server';
+                await signOut({ redirectTo: "/login" });
               }}
             >
               <button type="submit">Sign Out</button>

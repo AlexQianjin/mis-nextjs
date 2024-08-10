@@ -16,12 +16,22 @@ export function Sample({ sample }: { sample: Sample }) {
           {sample.status}
         </Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell" suppressHydrationWarning={true}>
+      <TableCell
+        className="hidden md:table-cell"
+        suppressHydrationWarning={true}
+      >
         {sample.createdAt?.toLocaleString()}
       </TableCell>
       <TableCell className="flex gap-2">
-        <DialogEdit sample={sample}/>
-        <DialogDelete sample={sample}/>
+        <DialogEdit
+          sample={{
+            id: sample.id,
+            name: sample.name,
+            description: sample.description || '',
+            status: sample.status
+          }}
+        />
+        <DialogDelete sample={sample} />
       </TableCell>
     </TableRow>
   );
