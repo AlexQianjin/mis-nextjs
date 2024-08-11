@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import {
   Home,
   LineChart,
@@ -18,6 +19,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
+
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -30,6 +32,7 @@ import { VercelLogo } from '@/components/icons/vercel-logo';
 import Providers from './providers';
 import { NavItem } from './nav-item';
 import { SearchInput } from './search';
+// import DashboardBreadcrumb from './dashboard-breadcrumb';
 
 export default function DashboardLayout({
   children
@@ -68,19 +71,19 @@ function DesktopNav() {
           <span className="sr-only">Acme Inc</span>
         </Link>
 
-        <NavItem href="#" label="Dashboard">
+        <NavItem href="/" label="Dashboard">
           <Home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Orders">
+        {/* <NavItem href="#" label="Orders">
           <ShoppingCart className="h-5 w-5" />
-        </NavItem>
+        </NavItem> */}
 
-        <NavItem href="/" label="Products">
+        <NavItem href="/samples" label="Samples">
           <Package className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/customers" label="Customers">
+        <NavItem href="/users" label="Users">
           <Users2 className="h-5 w-5" />
         </NavItem>
 
@@ -171,18 +174,18 @@ function DashboardBreadcrumb() {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="#">Dashboard</Link>
+            <Link href="/">Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="#">Products</Link>
+            <Link href="/samples">Samples</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>All Products</BreadcrumbPage>
+          <BreadcrumbPage>All Samples</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

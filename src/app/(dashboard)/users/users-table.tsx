@@ -15,26 +15,23 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Sample } from './sample';
-import type { Sample as SampleSelect } from '@prisma/client';
+import { User } from './user';
+import type { User as UserSelect } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { User } from 'next-auth';
 
-export function SamplesTable({
-  samples,
+export function UsersTable({
+  users,
   offset,
-  totalSamples,
-  user
+  totalUsers
 }: {
-  samples: SampleSelect[];
+  users: UserSelect[];
   offset: number;
-  totalSamples: number;
-  user: User
+  totalUsers: number;
 }) {
   const router = useRouter();
-  const samplesPerPage = 5;
+  const usersPerPage = 5;
 
   function prevPage() {
     router.back();
@@ -47,9 +44,9 @@ export function SamplesTable({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Samples</CardTitle>
+        <CardTitle>Users</CardTitle>
         <CardDescription>
-          Manage your samples and view their sales performance.
+          Manage your users.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -57,8 +54,7 @@ export function SamplesTable({
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Email</TableHead>
               <TableHead className="hidden md:table-cell">Created at</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
@@ -66,8 +62,8 @@ export function SamplesTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {samples.map((sample) => (
-              <Sample key={sample.id} sample={sample} user={user}/>
+            {users.map((user) => (
+              <User key={user.id} user={user} />
             ))}
           </TableBody>
         </Table>
@@ -77,12 +73,12 @@ export function SamplesTable({
           <div className="text-xs text-muted-foreground">
             Showing{' '}
             <strong>
-              {totalSamples < samplesPerPage
+              {totalUsers < usersPerPage
                 ? 1
-                : Math.min(offset - samplesPerPage, totalSamples) + 1}
-              -{totalSamples < samplesPerPage ? totalSamples : offset}
+                : Math.min(offset - usersPerPage, totalUsers) + 1}
+              -{totalUsers < usersPerPage ? totalUsers : offset}
             </strong>{' '}
-            of <strong>{totalSamples}</strong> samples
+            of <strong>{totalUsers}</strong> users
           </div>
           <div className="flex">
             <Button
@@ -90,7 +86,7 @@ export function SamplesTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset === samplesPerPage}
+              disabled={offset === usersPerPage}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Prev
@@ -100,7 +96,7 @@ export function SamplesTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset + samplesPerPage > totalSamples}
+              disabled={offset + usersPerPage > totalUsers}
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />

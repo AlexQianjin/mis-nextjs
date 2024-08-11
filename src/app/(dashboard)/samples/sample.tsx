@@ -5,8 +5,9 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import type { Sample } from '@prisma/client';
 import { DialogEdit } from './sample-edit';
 import { DialogDelete } from './sample-delete';
+import { User } from 'next-auth';
 
-export function Sample({ sample }: { sample: Sample }) {
+export function Sample({ sample, user }: { sample: Sample; user: User }) {
   return (
     <TableRow>
       <TableCell className="font-medium">{sample.name}</TableCell>
@@ -30,6 +31,7 @@ export function Sample({ sample }: { sample: Sample }) {
             description: sample.description || '',
             status: sample.status
           }}
+          user={user}
         />
         <DialogDelete sample={sample} />
       </TableCell>

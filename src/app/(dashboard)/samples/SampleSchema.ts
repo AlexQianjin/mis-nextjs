@@ -8,7 +8,8 @@ export const SampleSchema = z.object({
     .min(3, { message: 'Must be 3 or more characters long' })
     .max(64, { message: 'Must be less then 64 characters' }),
   description: z.string().optional(),
-  status: z.nativeEnum(SampleStatus)
+  status: z.nativeEnum(SampleStatus),
+  ownerId: z.string().optional()
 });
 
 export type Sample = z.infer<typeof SampleSchema>;

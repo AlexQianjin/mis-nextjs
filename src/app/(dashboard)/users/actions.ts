@@ -4,22 +4,22 @@ import { revalidatePath } from 'next/cache';
 
 import prisma from '@/lib/db';
 
-import type { Sample } from '@prisma/client';
-import type { Sample as ZodSample } from './SampleSchema';
-import { SampleSchema } from './SampleSchema';
+import type { User } from '@prisma/client';
+import type { User as ZodUser } from './UserSchema';
+import { UserSchema } from './UserSchema';
 
 // type ReturnType = {
 //   message: string;
 //   errors?: Record<string, unknown>;
 // };
 
-export async function getSamples(
+export async function getUsers(
   search: string,
   offset: number
 ): Promise<{
-  samples: Sample[];
+  users: User[];
   newOffset: number | null;
-  totalSamples: number;
+  totalUsers: number;
 }> {
   // Always search the full table, not per page
   // .select()
@@ -27,38 +27,37 @@ export async function getSamples(
   //       .where(ilike(samples.name, `%${search}%`))
   //       .limit(1000)
   if (search) {
-    const samples: Sample[] = await prisma.sample.findMany({
-      where: { name: { contains: search }, isDeleted: false },
+    const users: User[] = await prisma.user.findMany({
+      where: { name: { contains: search } },
       take: 1000
     });
     return {
-      samples: samples,
+      users: users,
       newOffset: null,
-      totalSamples: 0
+      totalUsers: 0
     };
   }
 
   if (offset === null) {
-    return { samples: [], newOffset: null, totalSamples: 0 };
+    return { users: [], newOffset: null, totalUsers: 0 };
   }
 
-  const totalSamples = await prisma.sample.count();
-  const moreSamples = await prisma.sample.findMany({
-    where: { isDeleted: false },
+  const totalUsers = await prisma.user.count();
+  const moreUsers = await prisma.user.findMany({
     skip: offset,
     take: 5
   });
-  const newOffset = moreSamples.length >= 5 ? offset + 5 : null;
+  const newOffset = moreUsers.length >= 5 ? offset + 5 : null;
 
   return {
-    samples: moreSamples,
+    users: moreUsers,
     newOffset,
-    totalSamples
+    totalUsers: totalUsers
   };
 }
 
-export async function editSample(currentState, formData: ZodSample) {
-  const parsed = SampleSchema.safeParse(formData);
+export async function editUser(currentState, formData: ZodUser) {
+  const parsed = UserSchema.safeParse(formData);
   if (!parsed.success) {
     return {
       message: 'Submission Failed',
@@ -69,16 +68,15 @@ export async function editSample(currentState, formData: ZodSample) {
 
   try {
     if (formData.id) {
-      const updated = await prisma.sample.update({
+      const updated = await prisma.user.update({
         where: { id: formData.id },
         data: { ...formData, updatedAt: new Date(Date.now()).toISOString() }
       });
       console.log(76, updated);
     } else {
-      const created = await prisma.sample.create({
+      const created = await prisma.user.create({
         data: {
           ...formData,
-          ownerId: formData.ownerId || '',
           updatedAt: new Date(Date.now()).toISOString()
         }
       });
@@ -90,8 +88,8 @@ export async function editSample(currentState, formData: ZodSample) {
     return { message: 'failed', errors: error };
   }
 }
-export async function deleteSample(formData: FormData) {
+export async function deleteUser(formData: FormData) {
   const id = formData.get('id') as string;
-  await prisma.sample.update({ where: { id: id }, data: { isDeleted: true } });
+  await prisma.user.delete({ where: { id: id } });
   revalidatePath('/');
 }

@@ -19,45 +19,35 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { PlusCircle } from 'lucide-react';
-import type { Sample } from './SampleSchema';
-import { editSample } from './actions';
+import type { User } from './UserSchema';
+import { editUser } from './actions';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { SampleSchema } from './SampleSchema';
-import { SampleStatus } from '@prisma/client';
-import { User } from 'next-auth';
+import { UserSchema } from './UserSchema';
 
 interface DialogEditProps {
-  sample?: Sample;
-  user: User
+  user?: User;
 }
 
-const defaultSample: Sample = {
+const defaultUser: User = {
   name: '',
-  description: '',
-  status: SampleStatus.LOGGED
+  email: '',
+  password: ''
 };
 
-export function DialogEdit({ sample, user }: DialogEditProps) {
-  const title = sample == null ? 'Add sample' : 'Edit sample';
+export function DialogEdit({ user }: DialogEditProps) {
+  const title = user == null ? 'Add user' : 'Edit user';
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const [state, formAction] = useFormState(editSample, null);
+  const [state, formAction] = useFormState(editUser, null);
 
-  const form = useForm<Sample>({
+  const form = useForm<User>({
     mode: 'onBlur',
-    resolver: zodResolver(SampleSchema),
-    defaultValues: sample == null ? { ...defaultSample } : { ...sample }
+    resolver: zodResolver(UserSchema),
+    defaultValues: user == null ? { ...defaultUser } : { ...user }
   });
 
   async function onSubmit() {
@@ -66,7 +56,7 @@ export function DialogEdit({ sample, user }: DialogEditProps) {
     /* No need to validate here because 
     react-hook-form already validates with 
     our Zod schema */
-    await formAction({...form.getValues(), ownerId: user.id});
+    await formAction(form.getValues());
     if (state?.errors) {
       // setMessage(result.message)
       // setErrors(result.errors)
@@ -81,18 +71,10 @@ export function DialogEdit({ sample, user }: DialogEditProps) {
     }
   }
 
-  const statusOptions: string[] = [
-    'LOGGED',
-    'PROCESSING',
-    'FINISHED',
-    'REPORTED',
-    'FAILED'
-  ];
-
   return (
-    <Dialog key={'edit-sample-dialog'} open={open} onOpenChange={setOpen}>
+    <Dialog key={'edit-user-dialog'} open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {sample == null ? (
+        {user == null ? (
           <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
@@ -131,12 +113,12 @@ export function DialogEdit({ sample, user }: DialogEditProps) {
               />
               <FormField
                 control={form.control}
-                name="description"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Description" {...field} />
+                      <Input placeholder="Email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,27 +126,13 @@ export function DialogEdit({ sample, user }: DialogEditProps) {
               />
               <FormField
                 control={form.control}
-                name="status"
+                name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sample status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {statusOptions.map((statusOption) => (
-                          <SelectItem key={statusOption} value={statusOption}>
-                            {statusOption}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Password" type='password' {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
